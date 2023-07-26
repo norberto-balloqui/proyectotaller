@@ -1,0 +1,317 @@
+{
+    "Apoderado":{
+        "rut":{
+            "tyoe":"String",
+            "required": true
+        },
+        "nombre":{
+            "tyoe":"String",
+            "required": true
+        },
+        "fecha_de_nac":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "direccion":{
+            "tyoe":"String",
+            "required": true
+        },
+        "telefono1":{
+            "tyoe":"String",
+            "required": true
+        },
+        "telefono2":{
+            "tyoe":"String",
+            "required": true
+        },
+        "correo":{
+            "tyoe":"String",
+            "required": true
+        }
+    },
+
+    "Grado":{
+        "nombre":{
+            "type":"String",
+            "enum":[
+                "Menor",
+                "Intermedio",
+                "Mayor"
+            ]
+        }
+    },
+
+    "Enfermedad":{
+        "nombre":{
+            "type":"String",
+            "required":true
+        }
+    },
+
+        "Discapacidad":{
+            "nombre":{
+                "type":"String",
+                "enum":[
+                    "ninguna",
+                    "física",
+                    "intelectual",
+                    "mental",
+                    "psicosocial",
+                    "múltiple",
+                    "sensorial",
+                    "auditiva",
+                    "visual"
+                ]
+            }
+    },
+
+    "Parvulo":{
+        "rut":{
+            "tyoe":"String",
+            "required": true
+        },
+        "nombre":{
+            "tyoe":"String",
+            "required": true
+        },
+        "fecha_de_nac":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "grado": {
+            "type":"String",
+            "enum":[
+                "Menor",
+                "Intermedio",
+                "Mayor"
+            ],
+            "required": true
+        },
+        "discapacidad": {
+            "type":"String",
+            "enum":[
+                "ninguna",
+                "física",
+                "intelectual",
+                "mental",
+                "psicosocial",
+                "múltiple",
+                "sensorial",
+                "auditiva",
+                "visual"
+            ],
+            "required": true
+        }
+    },
+    
+    "Educadora":{
+        "rut":{
+            "tyoe":"String",
+            "required": true
+        },
+        "nombre":{
+            "tyoe":"String",
+            "required": true
+        },
+        "fecha_de_nac":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "direccion":{
+            "tyoe":"String",
+            "required": true
+        },
+        "telefono1":{
+            "tyoe":"String",
+            "required": true
+        },
+        "correo":{
+            "tyoe":"String",
+            "required": true
+        }
+    },
+
+    "Asistente":{
+        "rut":{
+            "tyoe":"String",
+            "required": true
+        },
+        "nombre":{
+            "tyoe":"String",
+            "required": true
+        },
+        "fecha_de_nac":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "direccion":{
+            "tyoe":"String",
+            "required": true
+        },
+        "telefono1":{
+            "tyoe":"String",
+            "required": true
+        },
+        "correo":{
+            "tyoe":"String",
+            "required": true
+        }
+    },
+
+    "Rutina":{
+        "fecha":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "grado": {
+            "type":"String",
+            "enum":[
+                "Menor",
+                "Intermedio",
+                "Mayor"
+            ],
+            "required": true
+        },
+        "actividad":{
+            "tyoe":"String",
+            "required": true
+        }
+    },
+
+    "Matricula":{
+        "fecha":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "valor":{
+            "tyoe":"Number",
+            "required": true
+        },
+        "abono":{
+            "tyoe":"Number",
+            "required": true
+        },
+        "parvulo":{
+            "type":"Schema.ObjectId",
+            "ref": "Parvulo"
+        }
+    },
+
+    "Observacion_Rutina":{
+        "titulo":{
+            "tyoe":"String",
+            "required": true
+        },
+        "comentario":{
+            "tyoe":"String",
+            "required": true
+        },
+        "educadora":{
+            "type":"Schema.ObjectId",
+            "ref": "Educadora"
+        },
+        "rutina":{
+            "type":"Schema.ObjectId",
+            "ref": "Rutina"
+        }
+    },
+
+    "Observacion_Parvulo":{
+        "fecha":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "titulo":{
+            "tyoe":"String",
+            "required": true
+        },
+        "comentario":{
+            "tyoe":"String",
+            "required": true
+        },
+        "asistente":{
+            "type":"Schema.ObjectId",
+            "ref": "Asistente"
+        },
+        "parvulo":{
+            "type":"Schema.ObjectId",
+            "ref": "Parvulo"
+        }
+    },
+
+    "Asistencia":{
+        "fecha":{
+            "tyoe":"Date",
+            "required": true
+        },
+        "titulo":{
+            "tyoe":"String",
+            "required": true
+        },
+        "comentario":{
+            "tyoe":"String",
+            "required": true
+        },
+        "asistente":{
+            "type":"Schema.ObjectId",
+            "ref": "Asistente"
+        },
+        "parvulo":{
+            "type":"Schema.ObjectId",
+            "ref": "Parvulo"
+        }
+    },
+
+    "Retiro":{
+        "hora":{
+            "type":"Date",
+            "required": true
+        },
+        "parvulo":{
+            "type":"Schema.ObjectId",
+            "ref": "Parvulo"
+        },
+        "apoderado":{
+            "type":"Schema.ObjectId",
+            "ref": "Apoderado"
+        }
+    },
+
+    "Antecedente_Medico":{
+        "parvulo":{
+            "type":"Schema.ObjectId",
+            "ref": "Parvulo"
+        },
+        "discapacidad":{
+            "type":"Schema.ObjectId",
+            "ref": "Discapacidad"
+        },
+        "enfermedad":{
+            "type":"Schema.ObjectId",
+            "ref": "Enfermedad"
+        },
+        "cuidados":"String"
+    },
+
+    "Responsable":{
+        "parvulo":{
+            "type":"Schema.ObjectId",
+            "ref": "Parvulo"
+        },
+        "apoderado":{
+            "type":"Schema.ObjectId",
+            "ref": "Apoderado"
+        }
+    },
+
+    "Asocia":{
+        "matricula":{
+            "type":"Schema.ObjectId",
+            "ref": "Matricula"
+        },
+        "apoderado":{
+            "type":"Schema.ObjectId",
+            "ref": "Apoderado"
+        }
+    }
+}
