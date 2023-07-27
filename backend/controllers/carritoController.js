@@ -27,25 +27,6 @@ const VerCarrito = (req, res) => {
         });
 };
 
-const VerProductosDePedido = (req, res) => {
-    const { idPedido } = req.params; // Obtener la id
-
-    Carrito.find({ pedido: idPedido }) 
-        .populate('producto') // Cargar los detalles
-        .exec((err, carritos) => {
-            if (err) {
-                return res.status(400).send({ message: "Error al obtener los productos del pedido" });
-            }
-
-            // Extrae los productos al carrito
-            const productos = carritos.map((carrito) => carrito.producto);
-
-            return res.status(200).send(productos);
-        });
-};
-
-
-
 
 const ModificarCarrito = (req, res) => {
     const { id } = req.params;
@@ -76,7 +57,6 @@ const EliminarCarrito = (req, res) => {
 module.exports = {
     CrearCarrito,
     VerCarrito,
-    VerProductosDePedido,
     ModificarCarrito,
     EliminarCarrito
 };
