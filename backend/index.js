@@ -17,7 +17,7 @@ const rutanotificacion = require('./routes/NotificacionRoutes');
 // Configuración de CORS
 app.use(cors({
   credentials: false,
-  origin: process.env.ORIGIN, // Asegúrate de tener la variable de entorno SERVIDOR configurada adecuadamente
+  servidor: process.env.SERVIDOR, // Asegúrate de tener la variable de entorno SERVIDOR configurada adecuadamente
   optionsSuccessStatus: 200,
 }));
 
