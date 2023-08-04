@@ -20,7 +20,7 @@ const Index = () => {
     <>
       <Container maxW={'container.sm'} centerContent backgroundColor="blackAlpha.400" mt="10" borderRadius="10">
         <Heading as="h1" textAlign="center" mt={10} mb={30}>
-          Tienda de Buzos
+          Tienda de Buzoss
         </Heading>
       </Container>
     </>
