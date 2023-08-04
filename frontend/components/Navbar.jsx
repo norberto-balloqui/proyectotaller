@@ -12,34 +12,23 @@ const Navbar = () => {
             Sala Cuna
             </Link>
             <ul>
+                
                 <li>
-                    <Link as={NextLink} href='/Educadora/VistaEducadoras'>Educadora</Link>
+                    <Link as={NextLink} href='/cliente'>Clientes</Link>
                 </li>
                 <li>
-                    <Link as={NextLink} href='/asistente'>Asistente</Link>
+                    <Link as={NextLink} href='/producto'>Productos</Link>
                 </li>
                 <li>
-                    <Link as={NextLink} href='/apoderado'>Apoderado</Link>
+                    <Link as={NextLink} href='/pedido'>Pedidos</Link>
                 </li>
                 <li>
-                    <Link as={NextLink} href='/asistencia'>Asistencia</Link>
+                    <a onClick={() => router.replace('/matricula')}>probar</a>
                 </li>
                 <li>
-                    <Link as={NextLink} href='/Rutina/VistaRutinas'>Rutina</Link>
+                    <Link as={NextLink} href='/Educadora/VistaEducadoras'>probar</Link>
                 </li>
-
-                <li>
-                    <Link as={NextLink} href='/enfermedad'>Enfermedad</Link>
-                </li>
-                <li>
-                    <Link as={NextLink} href='/antecedente'>Antecedente</Link>
-                </li>
-                <li>
-                    <a onClick={() => router.replace('/parvulo')}>Parvulo</a>
-                </li>
-                <li>
-                    <a onClick={() => router.replace('/matricula')}>Matricula</a>
-                </li>
+                
             </ul>
         </nav>
     </Stack>
