@@ -2,7 +2,7 @@
 import React, { useEffect as effect, useState as state} from 'react'
 import { Button, Container, Heading, Stack, Table, Tbody, Td, Thead, Tr, HStack } from '@chakra-ui/react'
 import router from 'next/router'
-import { VerCliente, EliminarCliente } from '../antmedico/cliente'
+import { VerCliente, EliminarCliente } from '../tienda/cliente'
 import Swal from 'sweetalert2'
 
 const cliente = () => {
