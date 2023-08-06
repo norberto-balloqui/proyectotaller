@@ -90,9 +90,9 @@ const PedidoCrear = () => {
 
 
             <FormControl id="fecha_registro">
-              <FormLabel></FormLabel>
-              <Input type="date" name={"fecha_registro"} onChange={handlechange} />
-            </FormControl>
+                <FormLabel>Fecha de registro</FormLabel>
+                <Input type="date" name="fecha_registro" onChange={handlechange} value={pedido.fecha_registro} readOnly />
+              </FormControl>
 
             <FormControl id="fecha_despacho">
               <FormLabel>Seleccione fecha de despacho</FormLabel>
@@ -112,20 +112,20 @@ const PedidoCrear = () => {
               </FormControl>
 
               <FormControl id="Abono Total">
-                <FormLabel>Ingrese monto de abono</FormLabel>
+                <FormLabel>Ingrese Abono</FormLabel>
                 <Input type="text" name="abono_total" placeholder="" onChange={handlechange} value={pedido.abono_total} />
               </FormControl>
 
               <FormControl id="cliente">
-                <FormLabel>Seleccione cliente</FormLabel>
-                <Select variant='filled' name='cliente' onChange={handlechange} placeholder=''>
+                <FormLabel></FormLabel>
+                <Select variant='filled' name='cliente' onChange={handlechange} placeholder='Seleccione Cliente'>
                   {bodyClientes()}
                 </Select>
               </FormControl>
 
               <FormControl id="estado">
-                <FormLabel>Seleccione estado</FormLabel>
-                <Select variant='filled' name='estado' onChange={handlechange} placeholder=''>
+                <FormLabel></FormLabel>
+                <Select variant='filled' name='estado' onChange={handlechange} placeholder='Seleccione Estado'>
                   {bodyEstados()}
                 </Select>
               </FormControl>

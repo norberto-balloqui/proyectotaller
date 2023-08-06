@@ -1,14 +1,26 @@
-import React, { useEffect as effect, useState as state } from 'react';
-import { Button, Container, Heading, Stack, Select, FormControl, FormLabel, Input, HStack } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Button, Container, Heading, Stack, Select, FormControl, FormLabel, Input, Textarea, HStack } from '@chakra-ui/react';
 import InputForm from '../components/InputForm';
 import router from 'next/router';
+
 import { VerNotificacion } from '../tienda/notificacion';
+
 import { CrearCliente } from '../tienda/cliente';
 import Swal from 'sweetalert2';
 
-const ClienteCrear = () => {
-  const [notificacion, verNotificacion] = state([]);
-  const [cliente, ClienteVer] = state({
+const ClienteCrear = () => { 
+
+  const [notificacion, verNotificacion] = useState([]);
+ 
+
+  useEffect(() => {
+    VerNotificacion().then(res => {
+      verNotificacion(res.data);
+    });
+
+  }, []);
+
+  const [cliente, ClienteVer] = useState({ 
     _id: '',
     rut: '',
     nombre: '',
@@ -17,39 +29,32 @@ const ClienteCrear = () => {
     notificacion: ''
   });
 
-  effect(() => {
-    VerNotificacion().then(res => {
-      verNotificacion(res.data);
-    });
-  }, []);
-
-  const bodynotificacion = () => {
-    return notificacion.map(notificacion => (
-      <option value={notificacion._id} key={notificacion._id}>
-        {notificacion.nombre}
-      </option>
+  const bodyNotificacion = () => {
+    return notificacion.map(notificaciones => (
+      <option value={notificaciones._id} key={notificaciones._id}>{notificaciones.whatsapp}</option>
     ));
   };
 
-  const cambioacliente = e => {
+
+  const cambiocliente = (e) => {
     ClienteVer({
       ...cliente,
       [e.target.name]: e.target.value
     });
   };
 
-  const clienteCrear = async e => {
+  const clientecrear = async (e) => { 
     e.preventDefault();
 
     console.log(cliente);
 
-    const response = await CrearCliente(cliente);
-    if (response.status === 200) {
+    const response = await CrearCliente(cliente); 
+    if (response.status === 200) { 
       Swal.fire({
         icon: 'success',
-        title: 'Cliente guardado',
+        title: 'Cliente guardado', 
         showConfirmButton: true,
-        text: 'Cliente se guardó correctamente'
+        text: 'Cliente está correcto' 
       }).then(() => {
         router.push('./cliente');
       });
@@ -58,7 +63,7 @@ const ClienteCrear = () => {
         icon: 'error',
         title: 'Error',
         showConfirmButton: true,
-        text: 'Hubo un error al guardar el cliente'
+        text: 'Cliente erróneo' 
       });
     }
   };
@@ -69,82 +74,48 @@ const ClienteCrear = () => {
         <Stack spacing={5} my={'30'}>
           <Heading as="h1" size={'2xl'} align="center" textColor={'Black'}>
             Registrar cliente
-          </Heading>
-          <Container maxW="container.lg" marginTop={'40'}>
+          </Heading> 
+          <Container maxW='container.lg' marginTop={'40'}>
             <Stack spacing={8}>
-              <b />
-
+              <b/>
+              
               <FormControl id="rut">
-                <FormLabel>Ingrese un cuidado</FormLabel>
-                <InputForm
-                  type="text"
-                  name="rut"
-                  placeholder="ejemplo 1111111-k"
-                  handlechange={cambioacliente}
-                  value={cliente.rut}
-                />
+                <FormLabel>Ingrese rut</FormLabel>
+                <InputForm type="text" name="rut" placeholder="Ingrese rut" handleChange={cambiocliente} value={cliente.rut} />
               </FormControl>
-
+            
               <FormControl id="nombre">
-                <FormLabel>Ingrese un cuidado</FormLabel>
-                <InputForm
-                  type="text"
-                  name="nombre"
-                  placeholder="Ingrese nombre"
-                  handlechange={cambioacliente}
-                  value={cliente.nombre}
-                />
+                <FormLabel>Ingrese nuevo cliente</FormLabel>
+                <InputForm type="text" name="nombre" placeholder="Ingrese nombre" handleChange={cambiocliente} value={cliente.nombre} />
               </FormControl>
 
               <FormControl id="direccion">
-                <FormLabel>Ingrese un cuidado</FormLabel>
-                <InputForm
-                  type="text"
-                  name="direccion"
-                  placeholder="Ingrese dirección"
-                  handlechange={cambioacliente}
-                  value={cliente.direccion}
-                />
+                <FormLabel>Ingrese nuevo cliente</FormLabel>
+                <InputForm type="text" name="direccion" placeholder="Ingrese direccion" handleChange={cambiocliente} value={cliente.direccion} />
               </FormControl>
 
               <FormControl id="telefono">
-                <FormLabel>Ingrese un cuidado</FormLabel>
-                <InputForm
-                  type="text"
-                  name="telefono"
-                  placeholder="Ingrese teléfono"
-                  handlechange={cambioacliente}
-                  value={cliente.telefono}
-                />
+                <FormLabel>Ingrese nuevo cliente</FormLabel>
+                <InputForm type="text" name="telefono" placeholder="Ingrese teléfono" handleChange={cambiocliente} value={cliente.telefono} />
               </FormControl>
 
               <FormControl id="notificacion">
-                <FormLabel>Notificación Whatsapp</FormLabel>
-                <Select variant="filled" name="notificacion" onChange={cambioacliente} placeholder="Notificación">
-                  {bodynotificacion()}
+                <FormLabel>Seleccione notificacion</FormLabel>
+                <Select variant="filled" name="notificacion" onChange={cambiocliente} placeholder="">
+                  {bodyNotificacion()}
                 </Select>
               </FormControl>
+
+             
+                         
             </Stack>
             <HStack maxW={'full'} alignItems="center">
-              <Button
-                colorScheme="green"
-                marginTop="10"
-                marginBottom="10"
-                minW={'100'}
-                marginRight="15"
-                onClick={clienteCrear}
-              >
+              <Button colorScheme="green" marginTop="10" marginBottom="10" minW={'100'} marginRight="15" onClick={clientecrear}>
                 Guardar
               </Button>
-              <Button
-                colorScheme="yellow"
-                marginTop="10"
-                marginBottom="10"
-                minW={'100'}
-                onClick={() => router.push('./cliente')}
-              >
+              <Button colorScheme="yellow" marginTop="10" marginBottom="10" minW={'100'} onClick={() => router.push('./cliente')}>
                 Volver
-              </Button>
+              </Button> 
             </HStack>
           </Container>
         </Stack>
@@ -154,4 +125,5 @@ const ClienteCrear = () => {
 };
 
 export default ClienteCrear;
+
 

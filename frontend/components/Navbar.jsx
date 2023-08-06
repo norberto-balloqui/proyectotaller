@@ -23,12 +23,7 @@ const Navbar = () => {
                 <li>
                     <Link as={NextLink} href='/pedido'>Pedidos</Link>
                 </li>
-                <li>
-                    <a onClick={() => router.replace('/matricula')}>probar</a>
-                </li>
-                <li>
-                    <Link as={NextLink} href='/Educadora/VistaEducadoras'>probar</Link>
-                </li>
+               
                 
             </ul>
         </nav>

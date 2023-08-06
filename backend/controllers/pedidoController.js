@@ -62,7 +62,7 @@ const VerPedido = (req, res) => {
 const VerDesp = (req, res) => {
     Pedido.find({})
         .populate({ path: 'estado', select: 'nombre' })
-        .populate({ path: 'cliente', select: 'rut' })
+        .populate({ path: 'cliente', select: 'rut nombre' })
         .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
         .exec((err, pedidos) => {
             if (err) {
@@ -121,7 +121,38 @@ const VerPedidoEsp = (req, res) => {
         });
 };
 
-
+const VerPedRut = (req, res) => {
+    const rutEspecifico = req.query.rut; // Obtener el rut desde la solicitud
+  
+    Pedido.find({ 'cliente.rut': rutEspecifico }) // Filtrar por el rut específico
+      .populate({ path: 'estado', select: 'nombre' })
+      .populate({ path: 'cliente', select: 'rut nombre' })
+      .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
+      .exec((err, pedidos) => {
+        if (err) {
+          return res.status(400).send({ message: "Error al obtener Pedido" });
+        }
+  
+        // Filtrar los pedidos que tienen el estado "Despachado"
+        const pedidosFiltrados = pedidos.filter((pedido) => {
+          return pedido.estado.nombre === "Despachado";
+        });
+  
+        // Formatear las fechas de fecha_registro y fecha_despacho al formato latinoamericano
+        const pedidosFormateados = pedidosFiltrados.map((pedido) => {
+          const fechaRegistro = pedido.fecha_registro.toLocaleDateString('es-AR');
+          const fechaDespacho = pedido.fecha_despacho.toLocaleDateString('es-AR');
+          return {
+            ...pedido.toObject(),
+            fecha_registro: fechaRegistro,
+            fecha_despacho: fechaDespacho
+          };
+        });
+  
+        return res.status(200).send(pedidosFormateados);
+      });
+  };
+  
 
 
 
@@ -156,6 +187,7 @@ module.exports = {
     VerPedido,
     VerDesp,
     VerPedidoEsp,
+    VerPedRut,
     ModificarPedido,
     EliminarPedido,
     

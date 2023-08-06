@@ -61,7 +61,7 @@ const ProductoCrear = () => {
         showConfirmButton: true,
         text: 'Producto está correcto' 
       }).then(() => {
-        router.push('./antecedente');
+        router.push('./producto');
       });
     } else {
       Swal.fire({

@@ -59,7 +59,7 @@ const Cliente = () => {
           <b/> <b/> 
 
           <HStack maxW={'full'} alignItems='center'>
-            <Button maxWidth={"200"} colorScheme={"whatsapp"} textColor={"white"} onClick={()=>router.push("./clienteCrear")}>Agregar Cliente</Button>
+            <Button maxWidth={"200"} colorScheme={"whatsapp"} textColor={"white"} onClick={()=>router.push("./clientecrear")}>Agregar Cliente</Button>
             <b/> <b/> 
             <Button maxWidth={"200"} colorScheme={"yellow"} textColor={"black"} onClick={()=>router.push("/")}>Volver</Button>
           </HStack>

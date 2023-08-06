@@ -20,6 +20,12 @@ const VerPedidoEsp = async (idPedido) => {
     return response;
 };
 
+const VerPedRut = async () => {
+    const response = await axios.get(`${process.env.SERVIDOR}//Pedido/${idPedidosrut}`);
+    return response;
+};
+
+
 const EliminarPedido = async (id) => {
     const response = await axios.delete(`${process.env.SERVIDOR}/Pedido/delete/${id}`);
     return response;
@@ -35,6 +41,7 @@ module.exports = {
     VerPedido,
     VerDesp,
     VerPedidoEsp,
+    VerPedRut,
     ModificarPedido,
     EliminarPedido
 };

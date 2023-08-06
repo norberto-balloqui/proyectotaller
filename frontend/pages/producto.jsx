@@ -64,7 +64,7 @@ const producto = () => {
 
   <HStack maxW={'full'} alignItems='center'>
  
-  <Button maxWidth={"200"} colorScheme={"whatsapp"} textColor={"white"} onClick={()=>router.push("./productoCrear")}>Agregar Producto</Button>
+  <Button maxWidth={"200"} colorScheme={"whatsapp"} textColor={"white"} onClick={()=>router.push("./productocrear")}>Agregar Producto</Button>
   <b/> <b/> 
   <Button maxWidth={"200"} colorScheme={"yellow"} textColor={"black"} onClick={()=>router.push("/")}>Volver</Button>
   
