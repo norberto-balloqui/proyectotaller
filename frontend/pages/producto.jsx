@@ -4,6 +4,7 @@ import router from 'next/router'
 import { VerProducto, EliminarProducto } from '../tienda/producto'
 import Swal from 'sweetalert2'
 
+
 const producto = () => {
   const [productos, VerProductos] = state([{
     _id:'',
@@ -28,8 +29,8 @@ const producto = () => {
     return productos.map((producto => (
         <Tr key={producto._id}>        
           <Td>{producto.nombre}</Td>
-          <Td>{producto.talla}</Td>
-          <Td>{producto.institucion.nombre}</Td>
+          <Td>{producto.talla?.nombre}</Td>
+          <Td>{producto.institucion?.nombre}</Td>
           <Td>
             <Button w={'full'} colorScheme="red" textColor={"white"} onClick={()=>productoEliminar(producto._id)}>Eliminar</Button>
           </Td>
@@ -46,8 +47,18 @@ const producto = () => {
 
   return (
     <>
-  <Container maxW='container.xl' my="40">
-  <Heading as={'h1'} size='2xl' textColor={'black'} textAlign={'center'} mt='15'>Productos</Heading>
+  <Container maxW='container.xl' my="50">
+  <Heading
+      as="h1"
+      size="2xl"
+      color="teal.500" // Cambia el color del texto a un tono de verde azulado
+      textAlign="center"
+      mt="15"
+      fontFamily="New Romance" // Si ya has definido la fuente "New Romance" en globals.css, puedes usarla aquí
+      textShadow="1px 1px 3px rgba(0, 0, 0, 0.3)" // Agrega un sombreado al texto
+    >
+      Productos
+    </Heading>
   <Stack spacing={'5'} mt='15'>
   <b/> <b/> 
 

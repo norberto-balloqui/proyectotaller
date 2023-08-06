@@ -1,92 +1,88 @@
+import React, { useEffect, useState } from 'react';
+import { Button, Container, Heading, Stack, Table, Tbody, Td, Thead, Tr, HStack } from '@chakra-ui/react';
+import router from 'next/router';
+import { VerCliente, EliminarCliente } from '../tienda/cliente';
+import Swal from 'sweetalert2';
 
-import React, { useEffect as effect, useState as state} from 'react'
-import { Button, Container, Heading, Stack, Table, Tbody, Td, Thead, Tr, HStack } from '@chakra-ui/react'
-import router from 'next/router'
-import { VerCliente, EliminarCliente } from '../tienda/cliente'
-import Swal from 'sweetalert2'
+const Cliente = () => { 
 
-const cliente = () => {
-  const [clientes, VerClientes] = state([{
-
-    _id:'',
-    rut:'',
-    nombre: '',
-    direccion: '',
-    telefono: '',
-    notificacion: ''
-  }])
+  const [clientes, VerClientes] = useState([]); 
 
   const clienteEliminar = (id) =>{
-    EliminarCliente(id)
+    EliminarCliente(id);
     Swal.fire({
       icon: 'success',
       title: 'Cliente eliminado',
       showConfirmButton: true,
       text: 'Cliente se eliminó con éxito'
     }).then(()=>{
-      window.location.reload()
-    })
-  }
+      window.location.reload();
+    });
+  };
 
   const body = () => {
-    return clientes.map((cliente => (
-        <Tr key={cliente._id}>        
-          <Td>{cliente.rut}</Td>
-          <Td>{cliente.nombre}</Td>
-          <Td>{cliente.direccion}</Td>
-          <Td>{cliente.telefono}</Td>
-          <Td>{cliente.notificacion.nombre}</Td>
-          <Td>
-            <Button w={'full'} colorScheme="red" textColor={"white"} onClick={()=>clienteEliminar(cliente._id)}>Eliminar</Button>
-          </Td>
-        </Tr>
-      )
-    ))
-  }
+    return clientes.map((cliente) => (
+      <Tr key={cliente._id}>        
+        <Td>{cliente.rut}</Td>
+        <Td>{cliente.nombre}</Td>
+        <Td>{cliente.direccion}</Td>
+        <Td>{cliente.telefono}</Td>
+        <Td>{cliente.notificacion.whatsapp}</Td>
+        <Td>
+          <Button w={'full'} colorScheme="red" textColor={"white"} onClick={()=>clienteEliminar(cliente._id)}>Eliminar</Button>
+        </Td>
+      </Tr>
+    ));
+  };
 
-  effect(() => {
+  useEffect(() => { 
     VerCliente().then(res =>{
-      VerClientes(res.data)
-    })
-  }, [])
+      VerClientes(res.data);
+    });
+  }, []);
 
   return (
     <>
-  <Container maxW='container.xl' my="40">
-  <Heading as={'h1'} size='2xl' textColor={'black'} textAlign={'center'} mt='15'>Antecedentes Medicos</Heading>
-  <Stack spacing={'5'} mt='15'>
-  <b/> <b/> 
+      <Container maxW='container.xl' my="50">
+      <Heading
+      as="h1"
+      size="2xl"
+      color="teal.500" // Cambia el color del texto a un tono de verde azulado
+      textAlign="center"
+      mt="15"
+      fontFamily="New Romance" // Si ya has definido la fuente "New Romance" en globals.css, puedes usarla aquí
+      textShadow="1px 1px 3px rgba(0, 0, 0, 0.3)" // Agrega un sombreado al texto
+    >
+      Clientes
+    </Heading>
+        <Stack spacing={'5'} mt='15'>
+          <b/> <b/> 
 
-  <HStack maxW={'full'} alignItems='center'>
- 
-  <Button maxWidth={"200"} colorScheme={"whatsapp"} textColor={"white"} onClick={()=>router.push("./clienteCrear")}>Agregar Cliente</Button>
-  <b/> <b/> 
-  <Button maxWidth={"200"} colorScheme={"yellow"} textColor={"black"} onClick={()=>router.push("/")}>Volver</Button>
-  
-  </HStack>
+          <HStack maxW={'full'} alignItems='center'>
+            <Button maxWidth={"200"} colorScheme={"whatsapp"} textColor={"white"} onClick={()=>router.push("./clienteCrear")}>Agregar Cliente</Button>
+            <b/> <b/> 
+            <Button maxWidth={"200"} colorScheme={"yellow"} textColor={"black"} onClick={()=>router.push("/")}>Volver</Button>
+          </HStack>
 
-  <Table variant='striped' colorScheme={"cyan"} border={'8px'} borderStyle='ridge' >
-        <Thead bgColor='green.200' borderBottom={'4px'} borderStyle='ridge'>
-            <Tr fontSize={'25'}>
+          <Table variant='striped' colorScheme={"cyan"} border={'8px'} borderStyle='ridge' >
+            <Thead bgColor='green.200' borderBottom={'4px'} borderStyle='ridge'>
+              <Tr fontSize={'25'}>
+                <Td>RUT</Td>
+                <Td>NOMBRE</Td>
+                <Td>DIRECCIÓN</Td>
+                <Td>TELÉFONO</Td>
+                <Td>NOTIFICACIÓN WHATSAPP</Td>
+                <Td>OPCIONES</Td>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {body()}
+            </Tbody>
+          </Table>
+        </Stack>
+      </Container>
+    </>
+  );
+};
 
-              <Td>RUT</Td>
-              <Td>NOMBRE</Td>
-              <Td>DIRECCIÓN</Td>
-              <Td>TELÉFONO</Td>
-              <Td>NOTIFICACIÓN WHATSAPP</Td>
-
-            </Tr>
-           </Thead>
-           <Tbody>
-
-           {body()}
-
-           </Tbody>
-    </Table>
-</Stack>
-</Container>
-
-</>
-)
-}
-export default cliente;
+export default Cliente; 

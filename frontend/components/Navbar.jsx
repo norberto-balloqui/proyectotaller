@@ -8,8 +8,9 @@ const Navbar = () => {
   return (
     <Stack>
         <nav className='nav'>
+            
             <Link onClick={() => router.replace('/')} className='site-title'>
-            Sala Cuna
+            Tienda de Buzos
             </Link>
             <ul>
                 

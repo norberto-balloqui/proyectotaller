@@ -31,7 +31,7 @@ const CrearPedido = (req, res) => {
 const VerPedido = (req, res) => {
     Pedido.find({})
         .populate({ path: 'estado', select: 'nombre' })
-        .populate({ path: 'cliente', select: 'rut' })
+        .populate({ path: 'cliente', select: 'rut nombre' }) // Aquí especificamos los campos que queremos mostrar: 'rut' y 'nombre'
         .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
         .exec((err, pedidos) => {
             if (err) {
@@ -57,6 +57,7 @@ const VerPedido = (req, res) => {
             return res.status(200).send(pedidosFormateados);
         });
 };
+
 
 const VerDesp = (req, res) => {
     Pedido.find({})

@@ -64,7 +64,7 @@ body{
 }
 
 .nav li.active {
-    background-color: rgba(51, 165, 159, 0.938);
+    background-color: rgba(165, 51, 155, 0.938);
 }
 
 .nav li:hover {
@@ -114,16 +114,19 @@ body{
     padding: 0 1rem;
     background: linear-gradient(
         to right,
-        #3d816a ,
-        #45ccc1,
-        #2ecc71,
-        #27ae60,
-        #16a085,
-        #1abc9c,
-        #107a65  
+        #3d8178 ,
+        #45c3cc,
+        #2eb4cc,
+        #27ae97,
+        #16a094,
+        #1abca1,
+        #107a71  
     );
 }
 
+
+
+  
 .site-title{
     font-size: 2rem;
     font-family: 'Times New Roman', Times, serif;
