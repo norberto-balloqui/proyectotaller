@@ -8,15 +8,36 @@ const Cliente = () => {
 
   const [clientes, VerClientes] = useState([]); 
 
-  const clienteEliminar = (id) =>{
-    EliminarCliente(id);
+  const clienteEliminar = (id) => {
     Swal.fire({
-      icon: 'success',
-      title: 'Cliente eliminado',
-      showConfirmButton: true,
-      text: 'Cliente se eliminó con éxito'
-    }).then(()=>{
-      window.location.reload();
+      icon: 'warning',
+      title: '¿Estás seguro?',
+      text: 'El cliente será eliminado permanentemente.',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        EliminarCliente(id).then(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Cliente eliminado',
+            text: 'El cliente se eliminó con éxito.',
+            showConfirmButton: false,
+            timer: 1500, // Cambia el tiempo (en milisegundos) que se muestra el mensaje de éxito
+          }).then(() => {
+            window.location.reload(); // Recargar la página después de eliminar el cliente
+          });
+        }).catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar el cliente',
+            text: 'Ha ocurrido un error al eliminar el cliente. Por favor, inténtalo nuevamente.',
+            showConfirmButton: true,
+          });
+        });
+      }
     });
   };
 
@@ -89,9 +110,8 @@ const Cliente = () => {
                   <Td>{cliente.notificacion.whatsapp}</Td>
                   <Td>
 
-                <Button w={'full'} colorScheme="blue" textColor={"white"} onClick={() => router.push(`/clientemodificar/${cliente._id}`)}>Modificar</Button>
-                </Td><Td>
-                <Button w={'full'} colorScheme="green" textColor={"white"} onClick={()=>clienteEliminar(cliente._id)}>Eliminar</Button>
+                
+                  <Button w={'full'} colorScheme="red" textColor={"white"} onClick={() => clienteEliminar(cliente._id)}>Eliminar</Button>
                   </Td>
                 </Tr>
               ))}

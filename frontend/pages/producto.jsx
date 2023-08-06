@@ -13,17 +13,38 @@ const producto = () => {
     institucion: ''
   }])
 
-  const productoEliminar = (id) =>{
-    EliminarProducto(id)
+  const productoEliminar = (id) => {
     Swal.fire({
-      icon: 'success',
-      title: 'Producto eliminado',
-      showConfirmButton: true,
-      text: 'Producto se eliminó con éxito'
-    }).then(()=>{
-      window.location.reload()
-    })
-  }
+      icon: 'warning',
+      title: '¿Estás seguro?',
+      text: 'El Producto será eliminado permanentemente.',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        EliminarProducto(id).then(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Producto eliminado',
+            text: 'El cliente se eliminó con éxito.',
+            showConfirmButton: false,
+            timer: 1500, // Cambia el tiempo (en milisegundos) que se muestra el mensaje de éxito
+          }).then(() => {
+            window.location.reload(); // Recargar la página después de eliminar el cliente
+          });
+        }).catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar el producto',
+            text: 'Ha ocurrido un error al eliminar el producto. Por favor, inténtalo nuevamente.',
+            showConfirmButton: true,
+          });
+        });
+      }
+    });
+  };
 
   const body = () => {
     return productos.map((producto => (
@@ -32,7 +53,7 @@ const producto = () => {
           <Td>{producto.talla?.nombre}</Td>
           <Td>{producto.institucion?.nombre}</Td>
           <Td>
-            <Button w={'full'} colorScheme="red" textColor={"white"} onClick={()=>productoEliminar(producto._id)}>Eliminar</Button>
+          <Button w={'full'} colorScheme="red" textColor={"white"} onClick={() => productoEliminar(producto._id)}>Eliminar</Button>
           </Td>
         </Tr>
       )

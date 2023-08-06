@@ -9,14 +9,35 @@ const Pedido = () => { // Cambiar "pedido" a "Pedido" por convención de nombres
   const [pedidos, VerPedidos] = useState([]);
 
   const pedidoEliminar = (id) => {
-    EliminarPedido(id);
     Swal.fire({
-      icon: 'success',
-      title: 'Pedido eliminado',
-      showConfirmButton: true,
-      text: 'Pedido se eliminó con éxito'
-    }).then(() => {
-      window.location.reload();
+      icon: 'warning',
+      title: '¿Estás seguro?',
+      text: 'El Pedido será eliminado permanentemente.',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        EliminarPedido(id).then(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Pedido eliminado',
+            text: 'El cliente se eliminó con éxito.',
+            showConfirmButton: false,
+            timer: 1500, // Cambia el tiempo (en milisegundos) que se muestra el mensaje de éxito
+          }).then(() => {
+            window.location.reload(); // Recargar la página después de eliminar el cliente
+          });
+        }).catch((error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al eliminar el pedido',
+            text: 'Ha ocurrido un error al eliminar el pedido. Por favor, inténtalo nuevamente.',
+            showConfirmButton: true,
+          });
+        });
+      }
     });
   };
 
@@ -31,7 +52,7 @@ const Pedido = () => { // Cambiar "pedido" a "Pedido" por convención de nombres
         <Td>{pedido.cliente ? `(${pedido.cliente.rut}) ${pedido.cliente.nombre}` : ''}</Td> {/* Concatenar rut y nombre del cliente */}
         <Td>{pedido.estado?.nombre}</Td>
         <Td>
-          <Button w={'full'} colorScheme="red" textColor={"white"} onClick={()=>pedidoEliminar(pedido._id)}>Eliminar</Button>
+        <Button w={'full'} colorScheme="red" textColor={"white"} onClick={() => pedidoEliminar(pedido._id)}>Eliminar</Button>
         </Td>
       </Tr>
     ));

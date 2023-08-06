@@ -31,7 +31,7 @@ const Pedido = () => {
         <Td>{pedido.cliente ? `(${pedido.cliente.rut}) ${pedido.cliente.nombre}` : ''}</Td> {/*rut y nombre del cliente */}
         <Td>{pedido.estado?.nombre}</Td>
         <Td>
-          <Button w={'full'} colorScheme="red" textColor={"white"} onClick={()=>pedidoEliminar(pedido._id)}>Eliminar</Button>
+          
         </Td>
       </Tr>
     ));
