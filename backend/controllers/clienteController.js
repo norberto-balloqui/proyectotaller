@@ -30,6 +30,21 @@ const VerCliente = (req, res) => {
         });
 };
 
+const VerClientePorId = (req, res) => {
+    const { id } = req.params;
+    Cliente.findById(id)
+      .populate('notificacion', 'whatsapp')
+      .exec((err, cliente) => {
+        if (err) {
+          return res.status(400).send({ message: "Error al obtener Cliente" });
+        }
+        if (!cliente) {
+          return res.status(404).send({ message: "Cliente no encontrado" });
+        }
+        return res.status(200).send(cliente);
+      });
+  };
+
 
 const ModificarCliente = (req, res) => {
     const { id } = req.params;
@@ -60,6 +75,7 @@ const EliminarCliente = (req, res) => {
 module.exports = {
     CrearCliente,
     VerCliente,
+    VerClientePorId,
     ModificarCliente,
     EliminarCliente
 };

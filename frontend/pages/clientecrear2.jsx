@@ -73,6 +73,7 @@ const ClienteCrear = () => {
   };
   
 
+
   return (
     <>
       <Container maxW="container.lg" my="50">
@@ -132,7 +133,7 @@ const ClienteCrear = () => {
               <Button colorScheme="green" marginTop="10" marginBottom="10" minW={'100'} marginRight="15" onClick={clientecrear}>
                 Guardar cliente
               </Button>
-              <Button colorScheme="yellow" marginTop="10" marginBottom="10" minW={'100'} onClick={() => router.push('./cliente')}>
+              <Button colorScheme="yellow" marginTop="10" marginBottom="10" minW={'100'} onClick={() => router.push('./pedidocrear')}>
                 Volver
               </Button> 
             </HStack>
@@ -146,5 +147,3 @@ const ClienteCrear = () => {
 };
 
 export default ClienteCrear;
-
-

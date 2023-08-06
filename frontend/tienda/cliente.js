@@ -11,6 +11,13 @@ const VerCliente = async () => {
     return response
 }
 
+const VerClientePorId = async () => {
+    const response = await axios.get(`${process.env.SERVIDOR}/Cliente/find/${id}`);
+    return response
+}
+
+
+
 const EliminarCliente = async (id) => {
     const response = await axios.delete(`${process.env.SERVIDOR}/Cliente/delete/${id}`);
     return response
@@ -24,6 +31,7 @@ const ModificarCliente = (id, cliente) => {
 module.exports = {
     CrearCliente,
     VerCliente,
+    VerClientePorId,
     ModificarCliente,
     EliminarCliente
 }

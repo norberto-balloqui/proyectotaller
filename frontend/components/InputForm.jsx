@@ -1,13 +1,15 @@
-import { FormControl, FormLabel, Input } from '@chakra-ui/react'
-import React from 'react'
+import { Input } from '@chakra-ui/react';
 
-const InputForm = ({label, handleChange, name, placeholder, type, value}) => {
+const InputForm = ({ type, name, placeholder, value, handlechange }) => {
   return (
-    <FormControl id={name}>
-        <FormLabel>{label}</FormLabel>
-        <Input type={type} placeholder={placeholder} name={name} onChange={handleChange} value={value}/>
-    </FormControl>
-  )
-}
+    <Input
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      value={value}
+      onChange={handlechange}
+    />
+  );
+};
 
-export default InputForm
+export default InputForm;
