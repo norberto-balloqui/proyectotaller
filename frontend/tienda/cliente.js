@@ -11,10 +11,17 @@ const VerCliente = async () => {
     return response
 }
 
-const VerClientePorId = async () => {
-    const response = await axios.get(`${process.env.SERVIDOR}/Cliente/find/${id}`);
-    return response
-}
+const VerClientePorId = async (id) => {
+    try {
+      const response = await axios.get(`${process.env.SERVIDOR}/Cliente/find/${id}`);
+      console.log('Datos recibidos:', response.data); // Agregamos el console.log para verificar los datos recibidos
+      return response;
+    } catch (error) {
+      console.error('Error al obtener el cliente por ID:', error);
+      throw error;
+    }
+  };
+  
 
 
 
