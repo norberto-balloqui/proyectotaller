@@ -45,13 +45,7 @@ Git clone https://github.com/norberto-balloqui/proyectotaller.git
 
 
 
-
-
-
-
-
-
-Configuración extras 
+Configuración Interna Ya montado el proyecto
 
 -Dirigirse dentro de la carpeta proyectotaller
 -Entrar a backend y configurar siguiente archivo
