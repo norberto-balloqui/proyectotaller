@@ -5,7 +5,7 @@ const CrearPedido = (req, res) => {
     const { fecha_registro, fecha_despacho, comentario, precio_total, abono_total, cliente, estado } = req.body;
 
     // Obtener día, mes y año de la fecha de despacho ingresada
-    const [dia, mes, anio] = fecha_despacho.split('-');
+    const [anio, mes, dia] = fecha_despacho.split('-');
 
     // Crear la fecha de despacho en formato JavaScript (mes - 1 porque los meses en JavaScript son indexados desde 0)
     const fechaDespacho = new Date(anio, mes - 1, dia);
