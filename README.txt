@@ -1,4 +1,4 @@
-Instalación manual servidor
+Instalación manual servidorr
 
 Ya estando logueado y en modo root hacer siguientes pasos.
 
