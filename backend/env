@@ -1,5 +1,0 @@
-PORT=3000
-SERVIDOR = http://localhost:3000/api
-
-DB = mongodb://balloqui:TE0R2pWBhH2dC9p6@ac-g0w1joq-shard-00-00.yr8xdg9.mongodb.net:27017,ac-g0w1joq-shard-00-01.yr8xdg9.mongodb.net:27017,ac-g0w1joq-shard-00-02.yr8xdg9.mongodb.net:27017/?ssl=true&replicaSet=atlas-m1tbc1-shard-0&authSource=admin&retryWrites=true&w=majority
-

@@ -14,19 +14,22 @@ const PedidoSchema = new Schema({
 
  comentario:{
             type: String,
-            required: true,
+            
             maxlength: 300,
-            match: /^[A-Za-z0-9áéíóúñÑ\s#]+$/
+            match: /^[A-Za-z0-9áéíóúñÑ\s#]+$/,
+            required: false
         },
 
 precio_total:{
             type: String,
-            match: /^[0-9]{1,7}$/
+            match: /^[0-9]{0,9}$/,
+            required: false
         },
 
 abono_total:{
             type: String,
-            match: /^[0-9]{0,7}$/
+            match: /^[0-9]{0,9}$/,
+            required: false
         },
 
  cliente:{
@@ -35,10 +38,11 @@ abono_total:{
             required: true
         },
 
- estado:{
-            type:Schema.ObjectId,
-            ref: 'Estado',
-        }
+        estado: {
+          type: Schema.ObjectId,
+          ref: 'Estado',
+         
+      }
 });
 
 module.exports = mongoose.model('Pedido', PedidoSchema);

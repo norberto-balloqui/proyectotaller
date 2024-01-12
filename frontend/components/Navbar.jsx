@@ -1,34 +1,43 @@
-import React from 'react'
-import { Stack, Link } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import NextLink from 'next/link'
+import React from 'react';
+import { Stack, Link } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 
 const Navbar = () => {
-    const router = useRouter()
+  const router = useRouter();
+
   return (
     <Stack>
-        <nav className='nav'>
-            
-            <Link onClick={() => router.replace('/')} className='site-title'>
-            Tienda de Buzos
-            </Link>
-            <ul>
-                
-                <li>
-                    <Link as={NextLink} href='/cliente'>Clientes</Link>
-                </li>
-                <li>
-                    <Link as={NextLink} href='/producto'>Productos</Link>
-                </li>
-                <li>
-                    <Link as={NextLink} href='/pedido'>Pedidos</Link>
-                </li>
-               
-                
-            </ul>
-        </nav>
-    </Stack>
-  )
-}
+      <nav className='nav'>
+        <Link onClick={() => router.replace('/')} className='site-title'>
+          Tienda de Buzos
 
-export default Navbar
+          
+        </Link>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', gap: '50px' }}>
+        <li>
+            <Link as={NextLink} href='/pedido' fontSize='xl'>
+              Pedidos
+            </Link>
+          </li>
+          
+          <li>
+            <Link as={NextLink} href='/cliente' fontSize='xl'>
+              Clientes
+            </Link>
+          </li>
+
+          <li>
+            <Link as={NextLink} href='/producto' fontSize='xl'>
+              Productos
+            </Link>
+          </li>
+          
+        </ul>
+      </nav>
+    </Stack>
+  );
+};
+
+export default Navbar;
+

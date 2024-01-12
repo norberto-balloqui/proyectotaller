@@ -7,7 +7,7 @@ const ClienteSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            match: /^[0-9]{7,8}[-|‐]{1}[0-9kK]{1}$/
+            match: /^[0-9]{6,9}[-|‐]{1}[0-9kK]{1}$/
         },
         nombre: {
             type: String,
@@ -17,13 +17,14 @@ const ClienteSchema = new Schema(
         },
         direccion: {
             type: String,
-            required: true,
+            required: false,
             maxlength: 30,
             match: /^[A-Za-z0-9áéíóúñÑ\s#]+$/
         },
         telefono: {
             type: Number,
-            required: true           
+            required: false,
+            match: /^[0-9]{1,12}$/       
         },
 
         notificacion:{

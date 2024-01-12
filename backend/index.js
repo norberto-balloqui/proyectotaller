@@ -1,9 +1,39 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('./config/passport-config');
 require('dotenv').config();
 
 const app = express();
+ // Ajusta la ruta según la ubicación real de tus rutas
+
+// Configuración de CORS
+app.use(cors({
+  origin: 'http://localhost:3001', // Reemplaza con el origen de tu frontend
+  credentials: true,
+  optionsSuccessStatus: 200,
+}));
+
+app.use(express.json());
+
+// Configuración de sesiones y Passport
+
+// Middleware de sesiones
+app.use(session({
+  secret: 'tu_secreto',  // Cadena secreta para firmar la cookie de sesión
+  resave: true,          // Fuerza a la sesión a guardarse incluso si no se ha modificado
+  saveUninitialized: true // Guarda sesiones sin modificaciones
+}));
+app.use(passport.initialize());
+
+// Middleware de Passport para manejar sesiones
+app.use(passport.session());
+
+// Rutas de autenticación de usuario
+
+// Resto de tus rutas
+const usuarioroute = require('./routes/UsuarioRoute');
 const rutacliente = require('./routes/ClienteRoutes');
 const rutainstitucion = require('./routes/InstitucionRoutes');
 const rutatalla = require('./routes/TallaRoutes');
@@ -14,14 +44,8 @@ const rutacarritopro = require('./routes/CarritoProRoutes');
 const rutaestado = require('./routes/EstadoRoutes');
 const rutanotificacion = require('./routes/NotificacionRoutes');
 
-// Configuración de CORS
-app.use(cors({
-  credentials: false,
-  servidor: process.env.SERVIDOR, // Asegúratesdsd de tener la variable de entorno SERVIDOR configurada adecuadamente
-  optionsSuccessStatus: 200,
-}));
 
-app.use(express.json());
+app.use('/api', usuarioroute);
 app.use('/api', rutacliente);
 app.use('/api', rutainstitucion);
 app.use('/api', rutatalla);

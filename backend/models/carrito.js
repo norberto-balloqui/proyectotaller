@@ -12,7 +12,15 @@ const CarritoSchema = new Schema(
             type:Schema.ObjectId,
             ref: 'Producto',
             required: true
+        },
+
+        cantidad: {
+            type: Number,
+            required: false,
+            match: /^[0-9]{1,12}$/       
         }
+
+
        
     }
 );

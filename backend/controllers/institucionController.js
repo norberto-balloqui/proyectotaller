@@ -1,11 +1,15 @@
 const Institucion = require('../models/institucion');
 
 const CrearInstitucion = (req, res) => {
-    const { nombre } = req.body;
+    let { nombre } = req.body;
+
+    // Convertir el nombre a mayúsculas antes de guardar
+    nombre = nombre.toUpperCase();
+
     const newInstitucion = new Institucion({
         nombre
-    
     });
+
     newInstitucion.save((err, institucion) => {
         if (err) {
             return res.status(400).send({ message: "Error al ingresar Institucion" });

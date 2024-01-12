@@ -1,0 +1,501 @@
+const Pedido = require('../models/pedido');
+
+
+const CrearPedido = (req, res) => {
+    const { fecha_registro, fecha_despacho, comentario, precio_total, abono_total, cliente, estado } = req.body;
+
+    // Obtener día, mes y año de la fecha de despacho ingresada
+    const [anio, mes, dia] = fecha_despacho.split('-');
+
+    // Crear la fecha de despacho en formato JavaScript (mes - 1 porque los meses en JavaScript son indexados desde 0)
+    const fechaDespacho = new Date(anio, mes - 1, dia);
+
+    const newPedido = new Pedido({
+        fecha_registro: new Date(),
+        fecha_despacho: fechaDespacho,
+        comentario,
+        precio_total,
+        abono_total,
+        cliente,
+        estado: estado || null, // Si se proporciona un estado, úsalo; de lo contrario, usa null
+    });
+
+    newPedido.save((err, pedido) => {
+        if (err) {
+            return res.status(400).send({ message: "Error al ingresar Pedido", error: err });
+        }
+
+        // Verifica si el estado es nulo o vacío y actualiza el pedido para establecer "En espera"
+        if (!pedido.estado) {
+            Pedido.findByIdAndUpdate(pedido._id, { estado: '64a6bbdddcbbe72b5ca9730f' }, { new: true }, (updateErr, updatedPedido) => {
+                if (updateErr) {
+                    return res.status(400).send({ message: "Error al actualizar el estado del Pedido", error: updateErr });
+                }
+                return res.status(200).send(updatedPedido);
+            });
+        } else {
+            return res.status(200).send(pedido);
+        }
+    });
+};
+const VerPedido = (req, res) => {
+    Pedido.find({})
+        .populate({ path: 'estado', select: 'nombre' })
+        .populate({ path: 'cliente', select: 'rut nombre' }) // Aquí especificamos los campos que queremos mostrar: 'rut' y 'nombre'
+        .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
+        .exec((err, pedidos) => {
+            if (err) {
+                return res.status(400).send({ message: "Error al obtener Pedido" });
+            }
+
+            // Filtrar los pedidos que tienen el estado "Despachado"
+            const pedidosFiltrados = pedidos.filter((pedido) => {
+                return pedido.estado.nombre !== "Despachado";
+            });
+
+            // Formatear las fechas de fecha_registro y fecha_despacho al formato latinoamericano
+            const pedidosFormateados = pedidosFiltrados.map((pedido) => {
+                const fechaRegistro = pedido.fecha_registro.toLocaleDateString('es-AR');
+                const fechaDespacho = pedido.fecha_despacho.toLocaleDateString('es-AR');
+                return {
+                    ...pedido.toObject(),
+                    fecha_registro: fechaRegistro,
+                    fecha_despacho: fechaDespacho
+                };
+            });
+
+            return res.status(200).send(pedidosFormateados);
+        });
+};
+
+
+const VerDesp = (req, res) => {
+    Pedido.find({})
+        .populate({ path: 'estado', select: 'nombre' })
+        .populate({ path: 'cliente', select: 'rut nombre' })
+        .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
+        .exec((err, pedidos) => {
+            if (err) {
+                return res.status(400).send({ message: "Error al obtener Pedido" });
+            }
+
+            // Filtrar los pedidos que tienen el estado "Despachado"
+            const pedidosFiltrados = pedidos.filter((pedido) => {
+                return pedido.estado.nombre === "Despachado";
+            });
+
+            // Formatear las fechas de fecha_registro y fecha_despacho al formato latinoamericano
+            const pedidosFormateados = pedidosFiltrados.map((pedido) => {
+                const fechaRegistro = pedido.fecha_registro.toLocaleDateString('es-AR');
+                const fechaDespacho = pedido.fecha_despacho.toLocaleDateString('es-AR');
+                return {
+                    ...pedido.toObject(),
+                    fecha_registro: fechaRegistro,
+                    fecha_despacho: fechaDespacho
+                };
+            });
+
+            return res.status(200).send(pedidosFormateados);
+        });
+};
+
+
+const VerPedidoEsp = (req, res) => {
+    const { idPedido } = req.params; // Obtén el ID del pedido desde los parámetros de la solicitud
+
+    Pedido.findById(idPedido)
+        .populate({ path: 'estado', select: 'nombre' })
+        .populate({ path: 'cliente', select: 'rut' })
+        .exec((err, pedido) => {
+            if (err) {
+                return res.status(400).send({ message: "Error al obtener Pedido" });
+            }
+
+            // Si no se encuentra un pedido con el ID dado, retorna un mensaje de error
+            if (!pedido) {
+                return res.status(404).send({ message: "Pedido no encontrado" });
+            }
+
+            // Formatear las fechas de fecha_registro y fecha_despacho al formato latinoamericano
+            const fechaRegistro = pedido.fecha_registro.toLocaleDateString('es-AR');
+            const fechaDespacho = pedido.fecha_despacho.toLocaleDateString('es-AR');
+
+            // Crear un objeto con los datos formateados del pedido
+            const pedidoFormateado = {
+                ...pedido.toObject(),
+                fecha_registro: fechaRegistro,
+                fecha_despacho: fechaDespacho
+            };
+
+            return res.status(200).send(pedidoFormateado);
+        });
+};
+
+const VerPedRut = (req, res) => {
+    const rutEspecifico = req.query.rut; // Obtener el rut desde la solicitud
+  
+    Pedido.find({ 'cliente.rut': rutEspecifico }) // Filtrar por el rut específico
+      .populate({ path: 'estado', select: 'nombre' })
+      .populate({ path: 'cliente', select: 'rut nombre' })
+      .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
+      .exec((err, pedidos) => {
+        if (err) {
+          return res.status(400).send({ message: "Error al obtener Pedido" });
+        }
+  
+        // Filtrar los pedidos que tienen el estado "Despachado"
+        const pedidosFiltrados = pedidos.filter((pedido) => {
+          return pedido.estado.nombre === "Despachado";
+        });
+  
+        // Formatear las fechas de fecha_registro y fecha_despacho al formato latinoamericano
+        const pedidosFormateados = pedidosFiltrados.map((pedido) => {
+          const fechaRegistro = pedido.fecha_registro.toLocaleDateString('es-AR');
+          const fechaDespacho = pedido.fecha_despacho.toLocaleDateString('es-AR');
+          return {
+            ...pedido.toObject(),
+            fecha_registro: fechaRegistro,
+            fecha_despacho: fechaDespacho
+          };
+        });
+  
+        return res.status(200).send(pedidosFormateados);
+      });
+  };
+  
+
+
+
+  const ModificarPedido = (req, res) => {
+    const { id } = req.params;
+    const { fecha_registro, fecha_despacho, ...restoDatos } = req.body;
+
+    // Formatear las fechas correctamente antes de actualizar el pedido
+    const fechaRegistro = new Date(fecha_registro);
+    const fechaDespacho = new Date(fecha_despacho);
+
+    // Actualizar el pedido con las fechas formateadas y los demás datos
+    Pedido.findOneAndUpdate(
+        { _id: id },
+        {
+            ...restoDatos,
+            fecha_registro: fechaRegistro,
+            fecha_despacho: fechaDespacho,
+        },
+        { new: true },
+        (err, pedido) => {
+            if (err) {
+                return res.status(400).send({ message: "Error al obtener Pedido", error: err });
+            }
+            if (!pedido) {
+                return res.status(404).send({ message: "Error al encontrar Pedido" });
+            }
+            return res.status(200).send(pedido);
+        }
+    );
+};
+
+
+const EliminarPedido = (req, res) => {
+    const { id } = req.params;
+    Pedido.findByIdAndDelete(id, (err, pedido) => {
+        if (err) {
+            return res.status(400).send({ message: "Error al obtener Pedido" });
+        }
+        if (!pedido) {
+            return res.status(404).send({ message: "Error al encontrar Pedido" });
+        }
+        return res.status(200).send(pedido);
+    });
+};
+
+module.exports = {
+    CrearPedido,
+    VerPedido,
+    VerDesp,
+    VerPedidoEsp,
+    VerPedRut,
+    ModificarPedido,
+    EliminarPedido,
+    
+};
+
+
+2const Pedido = require('../models/pedido');
+const { format } = require('date-fns');
+const es = require('date-fns/locale/es'); // Importar la configuración local para español
+const moment = require('moment');
+const axios = require('axios');
+
+const CrearPedido = (req, res) => {
+    const { fecha_registro, fecha_despacho, comentario, precio_total, abono_total, cliente, estado } = req.body;
+
+    // Crear la fecha de registro en formato JavaScript
+    const fechaRegistro = new Date();
+
+    // Obtener día, mes y año de la fecha de despacho ingresada
+    const [dia, mes, anio] = fecha_despacho.split('-');
+
+    // Crear la fecha de despacho en formato JavaScript
+    const fechaDespacho = new Date(anio, mes - 1, dia);
+
+    const newPedido = new Pedido({
+        fecha_registro: fechaRegistro,
+        fecha_despacho: fechaDespacho,
+        comentario,
+        precio_total,
+        abono_total,
+        cliente,
+        estado: estado || null,
+    });
+
+    newPedido.save((err, pedido) => {
+        if (err) {
+            return res.status(400).send({ message: "Error al ingresar Pedido", error: err });
+        }
+
+        // Verifica si el estado es nulo o vacío y actualiza el pedido para establecer "En espera"
+        if (!pedido.estado) {
+            Pedido.findByIdAndUpdate(pedido._id, { estado: '64a6bbdddcbbe72b5ca9730f' }, { new: true }, (updateErr, updatedPedido) => {
+                if (updateErr) {
+                    return res.status(400).send({ message: "Error al actualizar el estado del Pedido", error: updateErr });
+                }
+                return res.status(200).send(updatedPedido);
+            });
+        } else {
+            return res.status(200).send(pedido);
+        }
+    });
+};
+
+
+const VerPedido = (req, res) => {
+    Pedido.find({})
+      .populate({ path: 'estado', select: 'nombre' })
+      .populate({ path: 'cliente', select: 'rut nombre' })
+      .sort({ fecha_despacho: 1 })
+      .exec((err, pedidos) => {
+        if (err) {
+          return res.status(400).send({ message: "Error al obtener Pedido" });
+        }
+  
+        const pedidosFiltrados = pedidos.filter((pedido) => {
+          return pedido.estado.nombre !== "Despachado";
+        });
+  
+        const pedidosFormateados = pedidosFiltrados.map((pedido) => {
+          // Asegurarse de que las fechas sean objetos Date
+          const fechaRegistro = format(new Date(pedido.fecha_registro), 'dd/MM/yyyy', { locale: es });
+          const fechaDespacho = format(new Date(pedido.fecha_despacho), 'dd/MM/yyyy', { locale: es });
+          console.log("Fecha de Registro en Backend:", fechaRegistro);
+          console.log("Fecha de Despacho en Backend:", fechaDespacho);
+          return {
+            ...pedido.toObject(),
+            fecha_registro: fechaRegistro,
+            fecha_despacho: fechaDespacho
+          };
+        });
+  
+        return res.status(200).send(pedidosFormateados);
+      });
+  };
+
+
+
+  const VerDesp = (req, res) => {
+      Pedido.find({})
+          .populate({ path: 'estado', select: 'nombre' })
+          .populate({ path: 'cliente', select: 'rut nombre' })
+          .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
+          .exec((err, pedidos) => {
+              if (err) {
+                  return res.status(400).send({ message: "Error al obtener Pedido" });
+              }
+  
+              // Filtrar los pedidos que tienen el estado "Despachado"
+              const pedidosFiltrados = pedidos.filter((pedido) => {
+                  return pedido.estado.nombre === "Despachado";
+              });
+  
+              // Formatear las fechas de fecha_registro y fecha_despacho con moment
+              const pedidosFormateados = pedidosFiltrados.map((pedido) => {
+                  const fechaRegistro = moment(pedido.fecha_registro).format('DD/MM/YYYY');
+                  const fechaDespacho = moment(pedido.fecha_despacho).format('DD/MM/YYYY');
+                  return {
+                      ...pedido.toObject(),
+                      fecha_registro: fechaRegistro,
+                      fecha_despacho: fechaDespacho
+                  };
+              });
+  
+              return res.status(200).send(pedidosFormateados);
+          });
+  };
+  
+
+
+const VerPedidoEsp = (req, res) => {
+    const { idPedido } = req.params; // Obtén el ID del pedido desde los parámetros de la solicitud
+
+    Pedido.findById(idPedido)
+        .populate({ path: 'estado', select: 'nombre' })
+        .populate({ path: 'cliente', select: 'rut' })
+        .exec((err, pedido) => {
+            if (err) {
+                return res.status(400).send({ message: "Error al obtener Pedido" });
+            }
+
+            // Si no se encuentra un pedido con el ID dado, retorna un mensaje de error
+            if (!pedido) {
+                return res.status(404).send({ message: "Pedido no encontrado" });
+            }
+
+            // Formatear las fechas de fecha_registro y fecha_despacho al formato latinoamericano
+            const fechaRegistro = pedido.fecha_registro.toLocaleDateString('es-AR');
+            const fechaDespacho = pedido.fecha_despacho.toLocaleDateString('es-AR');
+
+            // Crear un objeto con los datos formateados del pedido
+            const pedidoFormateado = {
+                ...pedido.toObject(),
+                fecha_registro: fechaRegistro,
+                fecha_despacho: fechaDespacho
+            };
+
+            return res.status(200).send(pedidoFormateado);
+        });
+};
+
+const VerPedRut = (req, res) => {
+    const rutEspecifico = req.query.rut; // Obtener el rut desde la solicitud
+  
+    Pedido.find({ 'cliente.rut': rutEspecifico }) // Filtrar por el rut específico
+      .populate({ path: 'estado', select: 'nombre' })
+      .populate({ path: 'cliente', select: 'rut nombre' })
+      .sort({ fecha_despacho: 1 }) // Ordenar por fecha_despacho de menor a mayor
+      .exec((err, pedidos) => {
+        if (err) {
+          return res.status(400).send({ message: "Error al obtener Pedido" });
+        }
+  
+        // Filtrar los pedidos que tienen el estado "Despachado"
+        const pedidosFiltrados = pedidos.filter((pedido) => {
+          return pedido.estado.nombre === "Despachado";
+        });
+  
+        // Formatear las fechas de fecha_registro y fecha_despacho al formato latinoamericano
+        const pedidosFormateados = pedidosFiltrados.map((pedido) => {
+          const fechaRegistro = pedido.fecha_registro.toLocaleDateString('es-AR');
+          const fechaDespacho = pedido.fecha_despacho.toLocaleDateString('es-AR');
+          return {
+            ...pedido.toObject(),
+            fecha_registro: fechaRegistro,
+            fecha_despacho: fechaDespacho
+          };
+        });
+  
+        return res.status(200).send(pedidosFormateados);
+      });
+  };
+  
+
+  const ModificarPedido = async (req, res) => {
+    const { id } = req.params;
+    const datosPedido = req.body;
+
+    try {
+        // Formatear las fechas antes de enviar la solicitud al servidor
+        if (datosPedido.fecha_registro) {
+            datosPedido.fecha_registro = moment(datosPedido.fecha_registro, 'DD/MM/YYYY').format('YYYY/MM/DD');
+        }
+
+        if (datosPedido.fecha_despacho) {
+            datosPedido.fecha_despacho = moment(datosPedido.fecha_despacho, 'DD/MM/YYYY').format('YYYY/MM/DD');
+        }
+
+        const url = process.env.SERVIDOR + '/api/Pedido/update/' + id;
+        const response = await axios.put(url, datosPedido);
+
+        // Verificar si la modificación fue exitosa
+        if (response.status === 200) {
+            console.log('Pedido modificado correctamente:', response.data);
+            return res.status(200).send(response.data);
+        } else {
+            console.error('Error al modificar pedido. Respuesta del servidor:', response.data);
+            return res.status(response.status).send({ message: 'Error al modificar pedido' });
+        }
+    } catch (error) {
+        console.error('Error al modificar el pedido:', error);
+
+        if (error.response) {
+            console.error('Respuesta del servidor:', error.response.data);
+        }
+
+        return res.status(500).send({ message: 'Error interno del servidor' });
+    }
+};
+
+
+  
+
+
+
+const EliminarPedido = (req, res) => {
+    const { id } = req.params;
+    Pedido.findByIdAndDelete(id, (err, pedido) => {
+        if (err) {const ModificarPedido = async (req, res) => {
+            const { id } = req.params;
+            const datosPedido = req.body;
+        
+            try {
+                // Formatear las fechas antes de enviar la solicitud al servidor
+                if (datosPedido.fecha_registro) {
+                    datosPedido.fecha_registro = moment(datosPedido.fecha_registro, 'DD/MM/YYYY').format('YYYY/MM/DD');
+                }
+        
+                if (datosPedido.fecha_despacho) {
+                    datosPedido.fecha_despacho = moment(datosPedido.fecha_despacho, 'DD/MM/YYYY').format('YYYY/MM/DD');
+                }
+        
+                const url = process.env.SERVIDOR + '/api/Pedido/update/' + id;  // Actualizar aquí
+                const response = await axios.put(url, datosPedido);
+        
+                // Verificar si la modificación fue exitosa
+                if (response.status === 200) {
+                    console.log('Pedido modificado correctamente:', response.data);
+                    return res.status(200).send(response.data);
+                } else {
+                    console.error('Error al modificar pedido. Respuesta del servidor:', response.data);
+                    return res.status(response.status).send({ message: 'Error al modificar pedido' });
+                }
+            } catch (error) {
+                console.error('Error al modificar el pedido:', error);
+        
+                if (error.response) {
+                    console.error('Respuesta del servidor:', error.response.data);
+                }
+        
+                return res.status(500).send({ message: 'Error interno del servidor' });
+            }
+        };
+        
+            return res.status(400).send({ message: "Error al obtener Pedido" });
+        }
+        if (!pedido) {
+            return res.status(404).send({ message: "Error al encontrar Pedido" });
+        }
+        return res.status(200).send(pedido);
+    });
+};
+
+module.exports = {
+    CrearPedido,
+    VerPedido,
+    VerDesp,
+    VerPedidoEsp,
+    VerPedRut,
+    ModificarPedido,
+    EliminarPedido,
+    
+};
+
+

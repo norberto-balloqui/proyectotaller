@@ -1,91 +1,82 @@
-import { Container, FormControl, FormLabel, Heading, Input, Stack, Button, HStack, useToast, ChakraProvider } from '@chakra-ui/react'
-import React, { useState } from 'react'
-import ModalExp from '../components/ModalExp'
-import {loginAsistente} from '../data/user'
-import {useRouter} from 'next/router'
+// userLogin.jsx
+import React, { useState } from 'react';
+import { FormControl, FormLabel, Input, Button, useToast } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useAuth } from '../context/AuthContext';
+import { loginUser } from '../data/user';
 
-const userLogin = () => {
-  const toast = useToast()
-  const router = useRouter()
-  const [rut, setRut] = useState('')
-  const [rut2, setRut2] = useState('')
-  const [rut3, setRut3] = useState('')
+const UserLogin = () => {
+  const toast = useToast();
+  const router = useRouter();
+  const { dispatch, state } = useAuth();
+  const [usuario, setUsuario] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleChange = (e) => {
-    setRut(e.target.value)
-    setRut2(e.target.value)
-    setRut3(e.target.value)
-  }
+  const handleChangeUsuario = (e) => {
+    setUsuario(e.target.value);
+  };
 
-  const login = (e) => {
-    e.preventDefault()
-    console.log("Educadora: ", rut)
-  }
+  const handleChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
 
-  const login2 = (e) => {
-    e.preventDefault()
-    loginAsistente(rut2).then(res => {
-      if(res.status == 200){
+  const login = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await loginUser({ usuario, password });
+      console.log('Login Response:', res);
+  
+      if (res.status === 200) {
         toast({
-          title: "Te has logeado con exito",
+          title: 'Te has logeado con éxito',
           status: 'success',
           duration: 2000,
-          isClosable: true
-        })
-      }else {
-        router.reload()
+          isClosable: true,
+        });
+  
+        dispatch({
+          type: 'LOGIN',
+          payload: {
+            user: res.data.user, // Actualizado para incluir información del usuario desde la respuesta
+            isAuthenticated: true,
+          }
+        });
+  
+        router.reload();
+      } else {
+        console.log('Credenciales incorrectas');
+        toast({
+          title: 'Credenciales incorrectas',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
       }
-    })
-    
-  }
-  const login3 = (e) => {
-    e.preventDefault()
-    console.log("Apoderado: ", rut3)
-  }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+    }
+  };
 
+  // Si el usuario está autenticado, no mostrar el formulario de inicio de sesión
+  if (state.isAuthenticated) {
+    return null;
+  }
 
   return (
-    <>
-    <Container maxW={"container.sm"} centerContent backgroundColor="blackAlpha.400" mt="10" borderRadius="10" >
-      <Heading as="h1"  textAlign="center" mt={10} mb={30}>Bienvenidos a la Sala Cuna</Heading>
+    <form>
+      <FormControl>
+        <FormLabel>Usuario</FormLabel>
+        <Input type="text" onChange={handleChangeUsuario} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Contraseña</FormLabel>
+        <Input type="password" onChange={handleChangePassword} />
+      </FormControl>
+      <Button colorScheme="green" onClick={login}>
+        Ingresar
+      </Button>
+    </form>
+  );
+};
 
-      <HStack>
-        <ModalExp header={"Login"} button="Educadora" color="blue" body={
-          <Stack>
-            <FormControl>
-              <FormLabel>RUT</FormLabel>
-              <Input onChange={handleChange}/>
-            </FormControl>
-            <Button colorScheme="green" onClick={login}>Ingresar</Button>
-          </Stack>
-        }/>
-
-      <ModalExp header={"Login"} button="Asistente" color="yellow" body={
-          <Stack>
-            <FormControl>
-              <FormLabel>RUT</FormLabel>
-              <Input onChange={handleChange}/>
-            </FormControl>
-            <Button colorScheme="green" onClick={login2}>Ingresar</Button>
-          </Stack>
-        }/>
-
-      <ModalExp header={"Login"} button="Apoderado" color="green" body={
-          <Stack>
-            <FormControl>
-              <FormLabel>RUT</FormLabel>
-              <Input onChange={handleChange}/>
-            </FormControl>
-            <Button colorScheme="green" onClick={login3}>Ingresar</Button>
-          </Stack>
-        }/>
-      </HStack>
-    </Container>
-    </>
-    
-    
-    
-  )
-}
-
-export default userLogin
+export default UserLogin;
